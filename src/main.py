@@ -1,7 +1,7 @@
 import json
 from collections import Counter, defaultdict
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict, List, Tuple
 
@@ -84,9 +84,11 @@ def parse_match_data(match_data):
 
 
 def get_with_cache(path: Path, url: str):
-    # TODO: LOL, cache invalidation :D
     if path.exists():
-        return json.load(path.open())
+        mtime = datetime.fromtimestamp(path.stat().st_mtime)
+        diff = datetime.now() - mtime
+        if diff < timedelta(days=1):
+            return json.load(path.open())
 
     r = httpx.get(url)
     assert r.status_code == 200
