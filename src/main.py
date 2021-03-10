@@ -152,7 +152,7 @@ if __name__ == "__main__":
     close_games = list()
     close_games_per_map = Counter()
 
-    CLOSE_GAME_CUTOFF = 10  # not included in close game
+    CLOSE_GAME_START = 12  # if both team are at this number of rounds
 
     for m in match_datas:
         map = m.map
@@ -164,7 +164,7 @@ if __name__ == "__main__":
 
         result_dicts[m.result_for(team_id)][map].append(m.id)
 
-        if min(*m.scores) > CLOSE_GAME_CUTOFF:
+        if min(*m.scores) >= CLOSE_GAME_START:
             close_games.append(m.id)
             close_games_per_map[map] += 1
 
@@ -205,5 +205,5 @@ if __name__ == "__main__":
     fmt_dict_output(losses)
 
     print()
-    print("=== Close games ===")
+    print(f"=== Close games (both teams have {CLOSE_GAME_START}+ rounds) ===")
     fmt_dict_output(close_games_per_map, is_results=False)
