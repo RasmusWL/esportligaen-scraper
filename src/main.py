@@ -1,4 +1,5 @@
 import json
+import sys
 from collections import Counter, defaultdict
 from dataclasses import dataclass
 from datetime import datetime, timedelta
@@ -33,11 +34,11 @@ class MatchData:
         )
 
     def score_for(self, team_id):
-        assert team_id in self.team_ids
+        assert team_id in self.team_ids, self
         return self.scores[0] if team_id == self.team_ids[0] else self.scores[1]
 
     def score_for_other(self, team_id):
-        assert team_id in self.team_ids
+        assert team_id in self.team_ids, self
         return self.scores[1] if team_id == self.team_ids[0] else self.scores[0]
 
     def format_for(self, team_id, longest_team_name):
@@ -114,7 +115,12 @@ def get_match_data(match_id: int):
 
 
 if __name__ == "__main__":
-    team_id = 2244
+    # naptoR.factory: 2338
+    # NoA: 2079
+    # whois: 2035
+    # BandCamp: 1988
+    team_id = int(sys.argv[1]) if len(sys.argv) == 2 else 2338
+
     _, name, match_ids = get_team_data(team_id)
 
     print(f"{name=} ({team_id=})")
